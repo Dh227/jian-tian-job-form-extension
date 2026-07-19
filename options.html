@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>我的网申资料 · 简填</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="简填首页"><span>简</span><strong>简填</strong></a>
+      <p>我的网申资料</p>
+      <span class="local-pill">仅保存在本机</span>
+    </header>
+
+    <main id="top" class="layout">
+      <aside class="guide">
+        <p class="kicker">ONE PROFILE, MANY FORMS</p>
+        <h1>填写一次，<br />把资料带去每一张网申表。</h1>
+        <p class="intro">先保存最常用的信息。进入企业招聘页面后，点击浏览器右上角的“简填”，即可预览并一键填写。</p>
+        <ol>
+          <li><span>1</span><div><strong>保存资料</strong><small>资料留在当前浏览器</small></div></li>
+          <li><span>2</span><div><strong>打开网申页面</strong><small>插件按需识别当前表单</small></div></li>
+          <li><span>3</span><div><strong>检查后提交</strong><small>插件永远不会替你提交</small></div></li>
+        </ol>
+        <div class="safety-note">
+          <strong>安全边界</strong>
+          <p>首版不保存身份证号、银行卡、社保、公积金和密码，也不会填写验证码、法律承诺或背景调查授权。</p>
+        </div>
+      </aside>
+
+      <form id="profileForm" class="profile-sheet" novalidate>
+        <div class="sheet-heading">
+          <div>
+            <span>DEFAULT PROFILE</span>
+            <h2>默认资料</h2>
+          </div>
+          <p><i>*</i> 为首版建议必填项</p>
+        </div>
+
+        <section>
+          <div class="section-title"><span>A</span><div><h3>身份与联系</h3><p>网申最常重复出现的信息</p></div></div>
+          <div class="field-grid">
+            <label><span>中文姓名 <i>*</i></span><input name="fullName" autocomplete="name" required placeholder="例如：张明" /></label>
+            <label><span>英文姓名</span><input name="englishName" placeholder="例如：Ming Zhang" /></label>
+            <label><span>手机号 <i>*</i></span><input name="phone" type="tel" autocomplete="tel" placeholder="中国大陆手机号" /></label>
+            <label><span>邮箱 <i>*</i></span><input name="email" type="email" autocomplete="email" placeholder="name@example.com" /></label>
+            <label><span>性别</span><select name="gender"><option value="">暂不填写</option><option>男</option><option>女</option><option>其他</option></select></label>
+            <label><span>出生日期</span><input name="birthDate" type="date" /></label>
+            <label><span>民族</span><input name="ethnicity" placeholder="例如：汉族" /></label>
+            <label><span>国籍</span><input name="nationality" placeholder="例如：中国" /></label>
+            <label><span>微信号</span><input name="wechat" placeholder="常用微信号" /></label>
+            <label><span>现居城市</span><input name="currentCity" placeholder="例如：上海" /></label>
+            <label class="wide"><span>通讯地址</span><input name="address" autocomplete="street-address" placeholder="省 / 市 / 区 / 详细地址" /></label>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title"><span>B</span><div><h3>求职意向</h3><p>每次申请前仍可在网页中调整</p></div></div>
+          <div class="field-grid">
+            <label><span>应聘岗位</span><input name="targetRole" placeholder="例如：产品经理" /></label>
+            <label><span>期望城市</span><input name="preferredCity" placeholder="例如：上海、杭州" /></label>
+            <label><span>岗位类型</span><select name="jobType"><option value="">暂不填写</option><option>全职</option><option>实习</option><option>兼职</option></select></label>
+            <label><span>到岗日期</span><input name="availableDate" type="date" /></label>
+            <label><span>期望薪资</span><input name="expectedSalary" placeholder="例如：15k-20k/月" /></label>
+            <label><span>可实习时长</span><input name="internshipDuration" placeholder="例如：6个月，每周5天" /></label>
+            <label><span>是否接受调剂</span><select name="acceptsAssignment"><option value="">每次确认</option><option value="是">是</option><option value="否">否</option></select></label>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title"><span>C</span><div><h3>最高学历</h3><p>首版填写一段主要教育经历</p></div></div>
+          <div class="field-grid">
+            <label><span>学校</span><input name="school" placeholder="学校全称" /></label>
+            <label><span>专业</span><input name="major" placeholder="专业全称" /></label>
+            <label><span>学历</span><select name="educationLevel"><option value="">暂不填写</option><option>大专</option><option>本科</option><option>硕士</option><option>博士</option><option>其他</option></select></label>
+            <label><span>学位</span><select name="degree"><option value="">暂不填写</option><option>学士</option><option>硕士</option><option>博士</option><option>无</option></select></label>
+            <label><span>入学时间</span><input name="educationStart" type="month" /></label>
+            <label><span>毕业时间</span><input name="graduationDate" type="month" /></label>
+          </div>
+        </section>
+
+        <section>
+          <div class="section-title"><span>D</span><div><h3>个人链接</h3><p>作品、代码和个人主页</p></div></div>
+          <div class="field-grid">
+            <label><span>个人网站</span><input name="personalWebsite" type="url" placeholder="https://" /></label>
+            <label><span>GitHub</span><input name="github" type="url" placeholder="https://github.com/" /></label>
+            <label><span>作品集</span><input name="portfolio" type="url" placeholder="作品集链接" /></label>
+            <label><span>博客</span><input name="blog" type="url" placeholder="博客链接" /></label>
+          </div>
+        </section>
+
+        <div class="form-footer">
+          <div id="saveStatus" class="save-status" role="status"></div>
+          <div class="footer-actions">
+            <button id="clearButton" class="text-button" type="button">清除本机资料</button>
+            <button class="save-button" type="submit">保存资料</button>
+          </div>
+        </div>
+      </form>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

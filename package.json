@@ -1,0 +1,10 @@
+{
+  "name": "jian-tian-job-form-extension",
+  "version": "0.1.0",
+  "private": true,
+  "description": "本地优先的网申基础资料一键填写浏览器扩展",
+  "scripts": {
+    "check": "node --check background.js && node --check core.js && node --check content.js && node --check popup.js && node --check options.js",
+    "test": "node --test tests/core.test.cjs"
+  }
+}

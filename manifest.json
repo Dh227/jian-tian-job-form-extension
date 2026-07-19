@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "简填 · 网申资料助手",
+  "version": "0.1.0",
+  "description": "在用户确认后，将本地保存的基础资料一键填写到网申表单。不会自动提交申请。",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "简填 · 网申资料助手",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html"
+}
