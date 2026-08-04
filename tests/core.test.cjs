@@ -46,5 +46,5 @@ test("汇总填写状态并计算网站支持等级", () => {
 test("预览时隐藏手机号、邮箱和敏感信息", () => {
   assert.equal(core.maskValue("phone", "13800138000"), "138****8000");
   assert.equal(core.maskValue("email", "demo@example.com"), "de***@example.com");
-  assert.equal(core.maskValue("idNumber", "110101199001011234"), "11********34");
+  assert.equal(core.maskValue("idNumber", "000000200001010000"), "00********00");
 });
