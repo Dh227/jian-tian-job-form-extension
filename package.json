@@ -1,10 +1,10 @@
 {
   "name": "jian-tian-job-form-extension",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "本地优先的网申基础资料一键填写浏览器扩展",
+  "description": "本地优先的简历识别、岗位档案与网申资料助手",
   "scripts": {
-    "check": "node --check background.js && node --check core.js && node --check content.js && node --check popup.js && node --check options.js",
-    "test": "node --test tests/core.test.cjs"
+    "check": "node --check background.js && node --check core.js && node --check resume-core.js && node --check job-core.js && node --check file-parser.js && node --check storage.js && node --check content.js && node --check popup.js && node --check options.js",
+    "test": "node --test tests/*.test.cjs"
   }
 }

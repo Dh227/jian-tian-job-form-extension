@@ -27,6 +27,11 @@
         <span id="supportBadge" class="support-badge neutral">扫描中</span>
       </section>
 
+      <section class="job-capture-card">
+        <div><strong>看到合适岗位？</strong><span>保存公司、岗位、JD 和当前页截图</span></div>
+        <button id="saveJobButton" class="capture-button" type="button">保存当前岗位</button>
+      </section>
+
       <section class="metric-strip" aria-label="字段识别结果">
         <div><strong id="recognizedCount">0</strong><span>可填写</span></div>
         <div><strong id="confirmCount">0</strong><span>待确认</span></div>
@@ -68,6 +73,7 @@
       <div id="resultMessage" class="result-message" aria-live="polite"></div>
       <footer>插件不会提交申请。填写后请逐项检查，再由你完成投递。</footer>
     </main>
+    <script src="job-core.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

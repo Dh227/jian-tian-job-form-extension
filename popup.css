@@ -37,6 +37,12 @@ h1 { margin: 0; font-family: "Songti SC", "STSong", serif; font-size: 25px; font
 .icon-button { border: 1px solid var(--line); border-radius: 6px; background: var(--card); color: var(--blue-dark); padding: 7px 10px; font-size: 12px; font-weight: 700; }
 
 .page-card { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--blue); border-radius: 8px; }
+.job-capture-card { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; border: 1px solid #c8d7e3; border-radius: 8px; padding: 10px 11px; background: var(--blue-soft); }
+.job-capture-card > div { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.job-capture-card strong { font-size: 11px; }
+.job-capture-card span { overflow: hidden; color: var(--muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.capture-button { flex: 0 0 auto; min-height: 32px; border: 1px solid var(--blue); border-radius: 6px; padding: 0 9px; background: #fff; color: var(--blue); font-size: 10px; font-weight: 750; }
+.capture-button:disabled { opacity: .55; cursor: not-allowed; }
 .site-line { display: flex; align-items: center; min-width: 0; gap: 10px; }
 .site-mark { display: grid; place-items: center; flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--blue-soft); color: var(--blue); font-family: "Songti SC", serif; font-weight: 700; }
 .site-copy { display: flex; min-width: 0; flex-direction: column; gap: 3px; }

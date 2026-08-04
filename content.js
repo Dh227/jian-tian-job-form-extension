@@ -78,6 +78,66 @@
     return { restored: snapshot.length };
   }
 
+  function collectJsonLd() {
+    const values = [];
+    for (const script of document.querySelectorAll('script[type="application/ld+json"]')) {
+      try {
+        values.push(JSON.parse(script.textContent || ""));
+      } catch {
+        // Invalid third-party structured data should not block the editable fallback.
+      }
+    }
+    return values;
+  }
+
+  function metaContent(...names) {
+    for (const name of names) {
+      const escaped = window.CSS?.escape ? window.CSS.escape(name) : name.replace(/["\\]/g, "\\$&");
+      const node = document.querySelector(`meta[property="${escaped}"], meta[name="${escaped}"]`);
+      if (node?.content) return node.content.trim();
+    }
+    return "";
+  }
+
+  function collectMainText() {
+    const candidate = document.querySelector([
+      'main',
+      '[role="main"]',
+      'article',
+      '[class*="job-detail" i]',
+      '[class*="job_detail" i]',
+      '[class*="position-detail" i]',
+      '[class*="job-description" i]'
+    ].join(", ")) || document.body;
+    if (!candidate) return "";
+    const clone = candidate.cloneNode(true);
+    clone.querySelectorAll("script, style, nav, footer, header, noscript, svg, canvas, form, button").forEach((node) => node.remove());
+    return String(clone.innerText || clone.textContent || "").replace(/\n{3,}/g, "\n\n").trim().slice(0, 30000);
+  }
+
+  function extractJob() {
+    if (!window.JobCore) throw new Error("岗位识别模块未加载");
+    const headings = Array.from(document.querySelectorAll("h1, h2, h3"))
+      .filter((node) => node.getClientRects().length > 0)
+      .map((node) => (node.innerText || node.textContent || "").trim())
+      .filter(Boolean)
+      .slice(0, 20);
+    const snapshot = {
+      url: location.href,
+      pageTitle: document.title,
+      jsonLd: collectJsonLd(),
+      headings,
+      mainText: collectMainText(),
+      meta: {
+        title: metaContent("og:title", "twitter:title"),
+        description: metaContent("description", "og:description", "twitter:description"),
+        siteName: metaContent("og:site_name", "application-name"),
+        company: metaContent("hiringOrganization", "company")
+      }
+    };
+    return window.JobCore.extractJobData(snapshot);
+  }
+
   const style = document.createElement("style");
   style.dataset.jtInjected = "true";
   style.textContent = `
@@ -92,6 +152,7 @@
       if (message?.type === "JT_SCAN") sendResponse({ ok: true, data: scan(message.profile || {}) });
       else if (message?.type === "JT_FILL") sendResponse({ ok: true, data: fill(message.profile || {}, message.options || {}) });
       else if (message?.type === "JT_UNDO") sendResponse({ ok: true, data: undo() });
+      else if (message?.type === "JT_EXTRACT_JOB") sendResponse({ ok: true, data: extractJob() });
     } catch (error) {
       sendResponse({ ok: false, error: error instanceof Error ? error.message : "页面处理失败" });
     }

@@ -10,11 +10,12 @@ const elements = {
   includeConfirmed: document.querySelector("#includeConfirmed"), overwrite: document.querySelector("#overwrite"),
   fillButton: document.querySelector("#fillButton"), undoButton: document.querySelector("#undoButton"),
   resultMessage: document.querySelector("#resultMessage"), openOptions: document.querySelector("#openOptions"),
-  createProfile: document.querySelector("#createProfile")
+  createProfile: document.querySelector("#createProfile"), saveJobButton: document.querySelector("#saveJobButton")
 };
 
 let activeTabId = null;
 let profile = {};
+let pageBridgeReady = false;
 
 function setResult(message, isError = false) {
   elements.resultMessage.textContent = message;
@@ -59,7 +60,9 @@ function renderScan(data) {
 }
 
 async function ensureContentScript() {
-  await chrome.scripting.executeScript({ target: { tabId: activeTabId }, files: ["core.js", "content.js"] });
+  if (pageBridgeReady) return;
+  await chrome.scripting.executeScript({ target: { tabId: activeTabId }, files: ["core.js", "job-core.js", "content.js"] });
+  pageBridgeReady = true;
 }
 
 async function sendToPage(message) {
@@ -124,10 +127,44 @@ function openOptions() {
   chrome.runtime.openOptionsPage();
 }
 
+async function saveCurrentJob() {
+  if (!activeTabId) return;
+  elements.saveJobButton.disabled = true;
+  setResult("正在提取岗位资料和截图…");
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (!tab?.id || !/^https?:/i.test(tab.url || "")) throw new Error("请先打开岗位详情网页");
+    await ensureContentScript();
+    const job = await sendToPage({ type: "JT_EXTRACT_JOB" });
+    let screenshot = null;
+    let screenshotWarning = "";
+    try {
+      const capture = await chrome.runtime.sendMessage({ type: "JT_CAPTURE_SCREENSHOT", windowId: tab.windowId });
+      if (!capture?.ok || !capture.dataUrl) throw new Error(capture?.error || "截图失败");
+      const company = JobCore.safeFilePart(job.company, "待补充公司");
+      const role = JobCore.safeFilePart(job.title, "待补充岗位");
+      const fileName = `${company}_${role}_岗位截图_${new Date().toISOString().slice(0, 10)}.jpg`;
+      screenshot = { dataUrl: capture.dataUrl, fileName };
+    } catch (error) {
+      screenshotWarning = `；截图未保存：${error.message}`;
+    }
+    const token = crypto.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const draftKey = `jobDraft:${token}`;
+    await chrome.storage.session.set({ [draftKey]: { job: { ...job, status: "准备投递" }, screenshot, createdAt: new Date().toISOString() } });
+    setResult(`岗位资料已提取，请确认后保存${screenshotWarning}` , Boolean(screenshotWarning));
+    await chrome.tabs.create({ url: chrome.runtime.getURL(`options.html#draft=${encodeURIComponent(token)}`) });
+  } catch (error) {
+    setResult(error.message || "岗位保存失败", true);
+  } finally {
+    elements.saveJobButton.disabled = false;
+  }
+}
+
 elements.fillButton.addEventListener("click", fillPage);
 elements.undoButton.addEventListener("click", undoFill);
 elements.openOptions.addEventListener("click", openOptions);
 elements.createProfile.addEventListener("click", openOptions);
+elements.saveJobButton.addEventListener("click", saveCurrentJob);
 
 (async function initialize() {
   const stored = await chrome.storage.local.get(["profile"]);

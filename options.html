@@ -3,39 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>我的网申资料 · 简填</title>
+    <title>求职资料工作台 · 简填</title>
+    <link rel="icon" href="data:," />
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
     <header class="topbar">
       <a class="brand" href="#top" aria-label="简填首页"><span>简</span><strong>简填</strong></a>
-      <p>我的网申资料</p>
+      <p>求职资料工作台</p>
+      <nav class="topnav" aria-label="资料工作区">
+        <a href="#profile">基本资料</a>
+        <a href="#resume">母版简历</a>
+        <a href="#jobs">岗位档案</a>
+      </nav>
       <span class="local-pill">仅保存在本机</span>
     </header>
 
-    <main id="top" class="layout">
-      <aside class="guide">
-        <p class="kicker">ONE PROFILE, MANY FORMS</p>
-        <h1>填写一次，<br />把资料带去每一张网申表。</h1>
-        <p class="intro">先保存最常用的信息。进入企业招聘页面后，点击浏览器右上角的“简填”，即可预览并一键填写。</p>
-        <ol>
-          <li><span>1</span><div><strong>保存资料</strong><small>资料留在当前浏览器</small></div></li>
-          <li><span>2</span><div><strong>打开网申页面</strong><small>插件按需识别当前表单</small></div></li>
-          <li><span>3</span><div><strong>检查后提交</strong><small>插件永远不会替你提交</small></div></li>
-        </ol>
-        <div class="safety-note">
-          <strong>安全边界</strong>
-          <p>首版不保存身份证号、银行卡、社保、公积金和密码，也不会填写验证码、法律承诺或背景调查授权。</p>
+    <main id="top" class="workspace">
+      <section class="hero">
+        <div>
+          <p class="kicker">ONE RESUME, EVERY APPLICATION</p>
+          <h1>先识别，再补充；<br />为每个岗位留一份可追溯资料。</h1>
         </div>
-      </aside>
+        <p>上传一次母版简历，自动补齐常用网申字段。看到合适岗位时保存网页和截图，再生成完整的 Codex 提示词。</p>
+      </section>
 
       <form id="profileForm" class="profile-sheet" novalidate>
-        <div class="sheet-heading">
-          <div>
-            <span>DEFAULT PROFILE</span>
-            <h2>默认资料</h2>
-          </div>
-          <p><i>*</i> 为首版建议必填项</p>
+        <div id="profile" class="sheet-heading anchor-heading">
+          <div><span>DEFAULT PROFILE</span><h2>基本资料</h2></div>
+          <p><i>*</i> 为建议必填项，可由母版简历自动补齐</p>
         </div>
 
         <section>
@@ -69,7 +65,7 @@
         </section>
 
         <section>
-          <div class="section-title"><span>C</span><div><h3>最高学历</h3><p>首版填写一段主要教育经历</p></div></div>
+          <div class="section-title"><span>C</span><div><h3>最高学历</h3><p>母版简历可自动识别</p></div></div>
           <div class="field-grid">
             <label><span>学校</span><input name="school" placeholder="学校全称" /></label>
             <label><span>专业</span><input name="major" placeholder="专业全称" /></label>
@@ -93,12 +89,97 @@
         <div class="form-footer">
           <div id="saveStatus" class="save-status" role="status"></div>
           <div class="footer-actions">
-            <button id="clearButton" class="text-button" type="button">清除本机资料</button>
-            <button class="save-button" type="submit">保存资料</button>
+            <button id="clearButton" class="text-button" type="button">清除全部本机资料</button>
+            <button class="save-button" type="submit">保存基本资料</button>
           </div>
         </div>
       </form>
+
+      <section id="resume" class="workspace-card anchor-heading">
+        <div class="card-heading">
+          <div><span>MASTER RESUME</span><h2>母版简历</h2><p>支持文本型 PDF 和 Word .docx，文件与解析结果只保存在当前浏览器。</p></div>
+          <div class="button-row">
+            <input id="resumeImportFile" type="file" accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden />
+            <button id="importResumeButton" class="primary-action" type="button">上传 PDF / DOCX</button>
+          </div>
+        </div>
+        <div id="resumeEmpty" class="empty-state">尚未导入母版简历。上传后会先显示识别预览，不会直接覆盖已有资料。</div>
+        <div id="resumeCurrent" class="resume-current hidden">
+          <div><strong id="resumeFileName"></strong><span id="resumeMeta"></span></div>
+          <div class="button-row"><button id="downloadResumeButton" type="button">下载母版</button><button id="editResumeButton" type="button">查看 / 修正</button><button id="deleteResumeButton" class="danger-button" type="button">删除母版</button></div>
+        </div>
+        <div id="resumeImportPanel" class="import-panel hidden">
+          <div class="import-summary"><strong>识别预览</strong><span id="resumeImportSummary"></span></div>
+          <ul id="resumeIssueList" class="issue-list"></ul>
+          <div>
+            <h3>同步到基本资料</h3>
+            <p class="help-text">新识别且不冲突的字段默认勾选；冲突字段由你决定是否覆盖。</p>
+            <div id="profileCandidateList" class="candidate-list"></div>
+          </div>
+          <div>
+            <h3>结构化简历内容</h3>
+            <p class="help-text">逐项核对识别到的能力、经历、项目、证书和待整理内容。</p>
+            <div id="resumeStructurePreview" class="structure-preview"></div>
+          </div>
+          <label class="stacked-field"><span>提取文本（可补充后重新识别）</span><textarea id="resumeRawText" rows="14"></textarea></label>
+          <div class="import-actions">
+            <button id="cancelResumeImportButton" type="button">取消</button>
+            <button id="reanalyzeResumeButton" type="button">重新识别</button>
+            <button id="applyResumeButton" class="primary-action" type="button">保存母版并同步勾选资料</button>
+          </div>
+        </div>
+        <div id="resumeStatus" class="inline-status" role="status"></div>
+      </section>
+
+      <section id="jobs" class="workspace-card anchor-heading">
+        <div class="card-heading">
+          <div><span>JOB ARCHIVE</span><h2>岗位档案</h2><p>在岗位网页打开插件，点击“保存当前岗位”，这里会出现可编辑的网页资料和截图。</p></div>
+          <button id="createJobButton" type="button">手工新建岗位</button>
+        </div>
+        <div id="jobEmpty" class="empty-state">还没有岗位档案。</div>
+        <div id="jobList" class="job-list"></div>
+        <div id="jobStatus" class="inline-status" role="status"></div>
+      </section>
     </main>
+
+    <dialog id="jobDialog" class="job-dialog">
+      <form id="jobForm" method="dialog">
+        <div class="dialog-heading"><div><span>JOB RECORD</span><h2>岗位档案</h2></div><button id="closeJobButton" class="icon-close" type="button" aria-label="关闭">×</button></div>
+        <input name="id" type="hidden" />
+        <div class="field-grid">
+          <label><span>公司 <i>*</i></span><input name="company" required /></label>
+          <label><span>岗位 <i>*</i></span><input name="title" required /></label>
+          <label><span>地点</span><input name="location" /></label>
+          <label><span>薪资</span><input name="salary" /></label>
+          <label><span>岗位类型</span><input name="employmentType" /></label>
+          <label><span>投递状态</span><select name="status"><option>收藏</option><option selected>准备投递</option><option>已投递</option><option>面试中</option><option>已结束</option></select></label>
+          <label class="wide"><span>来源网址</span><input name="sourceUrl" type="url" /></label>
+          <label><span>来源平台</span><input name="sourcePlatform" /></label>
+          <label class="wide"><span>岗位描述 / JD</span><textarea name="description" rows="8"></textarea></label>
+          <label class="wide"><span>任职要求</span><textarea name="requirements" rows="5"></textarea></label>
+          <label class="wide"><span>备注</span><textarea name="notes" rows="4"></textarea></label>
+        </div>
+        <section class="attachment-section">
+          <div class="subheading"><div><h3>岗位截图</h3><p>自动截图为当前可见区域；可以继续追加本机截图。</p></div><label class="file-button">追加截图<input id="jobScreenshotFile" type="file" accept="image/*" multiple hidden /></label></div>
+          <div id="jobScreenshotList" class="screenshot-list"></div>
+        </section>
+        <section class="prompt-section">
+          <label class="stacked-field"><span>Codex 工作区</span><input id="workspacePath" value="~/Documents/简历修改" /></label>
+          <div class="button-row"><button id="generatePromptButton" type="button">生成提示词</button><button id="copyPromptButton" class="primary-action" type="button" disabled>复制提示词</button></div>
+          <textarea id="promptPreview" rows="10" readonly placeholder="保存岗位后生成提示词"></textarea>
+          <p class="help-text">复制后，请把母版文件和下方列出的岗位截图一起附给 Codex。</p>
+        </section>
+        <div id="jobDialogStatus" class="inline-status" role="status"></div>
+        <div class="dialog-actions"><button id="deleteJobButton" class="danger-button hidden" type="button">删除岗位</button><span></span><button id="cancelJobButton" type="button">取消</button><button id="saveJobButton" class="primary-action" type="submit">保存岗位</button></div>
+      </form>
+    </dialog>
+
+    <script src="vendor/pdfjs/pdf.min.js"></script>
+    <script src="vendor/mammoth/mammoth.browser.min.js"></script>
+    <script src="resume-core.js"></script>
+    <script src="file-parser.js"></script>
+    <script src="job-core.js"></script>
+    <script src="storage.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

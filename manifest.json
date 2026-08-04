@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
   "name": "简填 · 网申资料助手",
-  "version": "0.1.0",
-  "description": "在用户确认后，将本地保存的基础资料一键填写到网申表单。不会自动提交申请。",
-  "permissions": ["activeTab", "scripting", "storage"],
+  "version": "0.2.0",
+  "description": "本地识别母版简历、保存岗位资料并在用户确认后填写网申表单。不会自动提交申请。",
+  "permissions": ["activeTab", "scripting", "storage", "clipboardWrite"],
   "background": {
     "service_worker": "background.js"
   },
